@@ -1,0 +1,1 @@
+class StorageService { Future<void> save(String k,String v) async {} }

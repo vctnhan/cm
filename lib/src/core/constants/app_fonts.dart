@@ -1,0 +1,1 @@
+class AppFonts { static const mainFont = 'Roboto'; }

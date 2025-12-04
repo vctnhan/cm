@@ -1,0 +1,1 @@
+class DialogService { void showError(String message) {} }

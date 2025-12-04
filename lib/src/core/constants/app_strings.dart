@@ -1,0 +1,1 @@
+class AppStrings { static const appName = 'MVVM App'; }

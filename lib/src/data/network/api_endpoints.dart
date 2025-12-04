@@ -1,0 +1,1 @@
+class ApiEndpoints { static const users = '/users'; }

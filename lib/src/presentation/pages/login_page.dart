@@ -2,8 +2,8 @@
 import 'package:chipmunk/main.dart';
 import 'package:flutter/material.dart';
 
-import '../repository/GGSigninHandler.dart';
-import 'HomePage.dart';
+import '../../data/repositories/GGSigninHandler.dart';
+import 'home/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.title});
