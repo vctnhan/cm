@@ -1,9 +1,11 @@
 // features/home/state/home_state.dart
 
+import 'package:chipmunk/src/domain/entities/message.dart';
+
 import '../base/base_state.dart';
 
 class HomeState extends BaseState {
-  final List<String> messages;
+  final List<MessageEntity> messages;
 
   const HomeState({
     super.isLoading = false,
@@ -15,7 +17,7 @@ class HomeState extends BaseState {
   HomeState copyWith({
     bool? isLoading,
     String? errorMessage,
-    List<String>? messages,
+    List<MessageEntity>? messages,
   }) {
     return HomeState(
       isLoading: isLoading ?? this.isLoading,

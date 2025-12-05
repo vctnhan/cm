@@ -8,12 +8,15 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
   final Map<String, StreamController<List<MessageEntity>>> _controllers = {};
 
   Stream<List<MessageEntity>> watchMessages(String channelId) {
+    /*--> UI cần danh sách tin nhắn hiện tại (từ _store)*/
     _controllers.putIfAbsent(channelId, () => StreamController<List<MessageEntity>>.broadcast());
     _store.putIfAbsent(channelId, () => []);
     return _controllers[channelId]!.stream;
   }
 
   Future<void> saveMessage(MessageEntity message) async {
+    /*--> add vào _store
+--> _controllers[channelA].add(list mới)  -> UI update*/
     final list = _store.putIfAbsent(message.channelId, () => []);
     list.add(message);
     _controllers.putIfAbsent(message.channelId, () => StreamController<List<MessageEntity>>.broadcast());
@@ -21,6 +24,8 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
   }
 
   Future<void> updateMessageByClientId(String clientId, MessageEntity updated) async {
+  /*  --> sửa message trong _store
+    --> bắn lại qua _controllers*/
     for (final entry in _store.entries) {
       final idx = entry.value.indexWhere((m) => m.clientId == clientId);
       if (idx >= 0) {

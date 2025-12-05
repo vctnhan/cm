@@ -39,38 +39,45 @@ class _ChatInputState extends State<ChatInput> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-        color: Colors.white,
-        child: Row(
-          children: [
-            IconButton(icon: Icon(Icons.add), onPressed: () {}),
-            Expanded(
-              child: TextField(
-                controller: _ctrl,
-                minLines: 1,
-                maxLines: 5,
-                decoration: InputDecoration(
-                  hintText: 'Type a message',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          color: Colors.white,
+          child: Row(
+            children: [
+              IconButton(icon: Icon(Icons.add), onPressed: () {}),
+              Expanded(
+                child: TextField(
+                  controller: _ctrl,
+                  minLines: 1,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    hintText: 'Type a message',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                  ),
                 ),
               ),
-            ),
-            IconButton(
-              icon: Icon(Icons.send),
-              onPressed: () {
-                final t = _ctrl.text.trim();
-                if (t.isEmpty) return;
-                widget.onSend(t);
-                _ctrl.clear();
-                widget.onTyping?.call(false);
-              },
-            )
-          ],
+              IconButton(
+                icon: Icon(Icons.send),
+                onPressed: () {
+                  final t = _ctrl.text.trim();
+                  if (t.isEmpty) return;
+                  widget.onSend(t);
+                  _ctrl.clear();
+                  widget.onTyping?.call(false);
+                },
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
