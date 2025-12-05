@@ -15,27 +15,32 @@ import 'home_provider.dart';
 
 // The main() function is the entry point of the Flutter application.
 void main() => runApp(
-  const ProviderScope(child: const MyApp()),
+  const ProviderScope(child: MyApp()),
 ); // Launches the app by running MyApp widget.
 
 // Creating a stateless widget which is the root of the application.
 class MyApp extends ConsumerWidget {
-  const MyApp({Key? key}) : super(key: key); // Constructor with optional key.
+  const MyApp({super.key}); // Constructor with optional key.
 
   // The build method describes the widget tree.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
-      title: "ListView.builder",
-      // Title of the application.
-      theme: ThemeData(primarySwatch: Colors.green),
-      // App theme with green as primary color.
-      debugShowCheckedModeBanner: false,
-      // Hides the debug banner in the top-right corner.
-
-      // Sets the home screen to ListViewBuilder widget.
-      // Note: No need to use the `new` keyword in modern Dart.
-      home: MyHomePage(title: 'hehehe'),
+    return ValueListenableBuilder(
+      valueListenable: themeNotifier,
+      builder: (context, value, child) {
+        return MaterialApp(
+          title: "ListView.builder",
+          // Title of the application.
+          theme: ThemeData(primarySwatch: Colors.green, primaryColor: value.primary),
+          // App theme with green as primary color.
+          debugShowCheckedModeBanner: false,
+          // Hides the debug banner in the top-right corner.
+        
+          // Sets the home screen to ListViewBuilder widget.
+          // Note: No need to use the `new` keyword in modern Dart.
+          home: MyHomePage(title: 'hehehe'),
+        );
+      }
     );
   }
 }
@@ -83,7 +88,6 @@ class MyHomePage extends ConsumerWidget {
                 //   JsonMapper.serialize(AppThemes.halloween),
                 // );
                 themeNotifier.value = newTheme;
-                themeNotifier.notifyListeners(); // ép rebuild
               },
               child: Text("sdfsdfsdf"),
             ),
