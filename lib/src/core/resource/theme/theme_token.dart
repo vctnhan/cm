@@ -21,4 +21,30 @@ class ThemeTokens {
     this.animationPath,
     this.logo,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'primary': primary?.value,
+      'background': background?.value,
+      'text': text?.value,
+      'assetPath': assetPath,
+      'iconPath': iconPath,
+      'imagePath': imagePath,
+      'animationPath': animationPath,
+      'logo': logo,
+    };
+  }
+
+  factory ThemeTokens.fromJson(Map<String, dynamic> json) {
+    return ThemeTokens(
+      primary: json['primary'] != null ? Color(json['primary']) : null,
+      background: json['background'] != null ? Color(json['background']) : null,
+      text: json['text'] != null ? Color(json['text']) : null,
+      assetPath: json['assetPath'],
+      iconPath: json['iconPath'],
+      imagePath: json['imagePath'],
+      animationPath: json['animationPath'],
+      logo: json['logo'],
+    );
+  }
 }

@@ -71,16 +71,18 @@ class MyHomePage extends ConsumerWidget {
           children: [
             FloatingActionButton(
               onPressed: () {
-                Logger.log("day day 1");
+                String jsonString = jsonEncode(AppThemes.halloween.toJson());
+                Logger.log("JSON: $jsonString");
 
-                var a =  jsonEncode(AppThemes.halloween);
-                Logger.log("day day $a");
-                final newTheme =
-                    jsonDecode(jsonEncode(AppThemes.halloween)) as ThemeTokens;
+                // Decode về Map, rồi convert sang ThemeTokens
+                Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+                ThemeTokens newTheme = ThemeTokens.fromJson(jsonMap);
+                // final newTheme =
+                //     jsonDecode(jsonEncode(AppThemes.halloween)) as ThemeTokens;
                 // final newTheme = JsonMapper.deserialize<ThemeTokens>(
                 //   JsonMapper.serialize(AppThemes.halloween),
                 // );
-                themeNotifier.value = newTheme!;
+                themeNotifier.value = newTheme;
                 themeNotifier.notifyListeners(); // ép rebuild
               },
               child: Text("sdfsdfsdf"),
