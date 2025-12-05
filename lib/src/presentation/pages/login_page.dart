@@ -1,7 +1,7 @@
 // Importing the Flutter Material package which contains all the UI components needed.
-import 'package:chipmunk/main.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/storage/storage.dart';
 import '../../data/repositories/GGSigninHandler.dart';
 import 'home/home_page.dart';
 
@@ -46,8 +46,16 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
+            Center(
+              child: GestureDetector(
+                child: Text("${Storage.instance.getString("date")} 123123"),
+                onTap: () {
+                  _loginWithGG();
+                },
+              ),
+            ),
             Center(
               child: GestureDetector(
                 child: Text("sign in with google"),

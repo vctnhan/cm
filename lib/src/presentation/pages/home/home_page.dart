@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chipmunk/src/core/helpers/logger.dart';
 import 'package:chipmunk/src/domain/entities/message.dart';
 import 'package:chipmunk/src/presentation/widgets/chat_input.dart';
@@ -15,7 +16,11 @@ import 'home_provider.dart';
 
 // The main() function is the entry point of the Flutter application.
 void main() => runApp(
-  const ProviderScope(child: const MyApp()),
+
+  const ProviderScope(
+      child: const MyApp()
+  ),
+
 ); // Launches the app by running MyApp widget.
 
 // Creating a stateless widget which is the root of the application.
@@ -81,23 +86,44 @@ class MyHomePage extends ConsumerWidget {
                 //   JsonMapper.serialize(AppThemes.halloween),
                 // );
                 themeNotifier.value = newTheme!;
-                themeNotifier.notifyListeners(); // ép rebuild
+                // themeNotifier.notifyListeners(); // ép rebuild
               },
               child: Text("sdfsdfsdf"),
             ),
+            // Expanded(
+            //   child: ListView.builder(
+            //     controller: _controller,
+            //     padding: const EdgeInsets.symmetric(vertical: 8),
+            //     // reverse: true, // Nếu muốn tin nhắn mới nằm dưới cùng
+            //     itemCount: state.messages.length,
+            //     itemBuilder: (_, index) {
+            //       final message = state.messages[index];
+            //       // return CustomItem(content: message, isMe: true);
+            //       return CustomItem2(content: message);
+            //     },
+            //   ),
+            // ),
             Expanded(
               child: ListView.builder(
                 controller: _controller,
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 // reverse: true, // Nếu muốn tin nhắn mới nằm dưới cùng
-                itemCount: state.messages.length,
+                itemCount: 1000000,
                 itemBuilder: (_, index) {
-                  final message = state.messages[index];
-                  return CustomItem(content: message, isMe: true);
+                  final message = MessageEntity(
+                    id: uuidV7(),
+                    clientId: "",
+                    channelId: "",
+                    senderId: "senderId",
+                    text: "Fake message số $index",
+                    createdAt: 0,
+                    status: MessageStatus.sent,
+                  );
+
+                  return CustomItem2(content: message);
                 },
               ),
             ),
-
             // Thanh nhập tin nhắn
             ChatInput(
               onSend: (input) {
@@ -170,53 +196,53 @@ class CustomItem extends ConsumerWidget {
   }
 }
 
-// class CustomItem2 extends StatelessWidget {
-//   final MessageEntity content;
-//
-//   const CustomItem2({Key? key, required this.content}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     print("rebuild r ne");
-//     return Container(
-//       padding: EdgeInsets.all(16),
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(12),
-//       ),
-//       child: Row(
-//         children: [
-//           const Icon(Icons.person),
-//           const SizedBox(width: 10),
-//           // Fix: Wrap Column with Expanded
-//           Expanded(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(content.text ?? ""),
-//                 // Text("Subtitle"),
-//                 // CachedNetworkImage(
-//                 //   imageUrl:
-//                 //   "https://cdn2.fptshop.com.vn/unsafe/Uploads/images/tin-tuc/172740/Originals/background-la-gi-1.jpg",
-//                 //   height: 120,
-//                 //   width: double.infinity,
-//                 //   fit: BoxFit.cover,
-//                 //   placeholder: (context, url) =>
-//                 //       Container(
-//                 //         height: 120,
-//                 //         color: Colors.grey[300], // placeholder tĩnh nhẹ
-//                 //       ),
-//                 //   errorWidget: (context, url, error) => Icon(Icons.error),
-//                 // ),
-//               ],
-//             ),
-//           ),
-//           Icon(Icons.arrow_forward_ios),
-//         ],
-//       ),
-//     );
-//   }
-// }
+class CustomItem2 extends StatelessWidget {
+  final MessageEntity content;
+
+  const CustomItem2({Key? key, required this.content}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    print("rebuild r ne");
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.person),
+          const SizedBox(width: 10),
+          // Fix: Wrap Column with Expanded
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(content.text ?? ""),
+                Text("Subtitle"),
+                CachedNetworkImage(
+                  imageUrl:
+                  "https://cdn2.fptshop.com.vn/unsafe/Uploads/images/tin-tuc/172740/Originals/background-la-gi-1.jpg",
+                  height: 120,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) =>
+                      Container(
+                        height: 120,
+                        color: Colors.grey[300], // placeholder tĩnh nhẹ
+                      ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+              ],
+            ),
+          ),
+          Icon(Icons.arrow_forward_ios),
+        ],
+      ),
+    );
+  }
+}
 
 // class ListViewBuilder extends StatefulWidget {
 //   const ListViewBuilder({Key? key})

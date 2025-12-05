@@ -1,13 +1,111 @@
+import 'dart:convert';
+
+import 'package:chipmunk/src/core/permission/permission.dart';
+import 'package:chipmunk/src/core/storage/storage.dart';
 import 'package:chipmunk/src/presentation/pages/login_page.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'firebase_options.dart';
 
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  description: 'This channel is used for important notifications.',
+  importance: Importance.high,
+);
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // bắt buộc nếu main async
+  WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
+
+  // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize local notifications
+  await initNotifications();
+
+  // Request permissions
+  await requestNotificationPermission();
+
+  // Set background message handler
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
+
+  // Listen foreground messages
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print("🔔 Foreground message: ${message.notification?.title}");
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+
+    if (notification != null && android != null) {
+      flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            channelDescription: channel.description,
+            icon: android.smallIcon,
+          ),
+          iOS: DarwinNotificationDetails(),
+        ),
+      );
+    }
+  });
+
+  // Listen token refresh
+  FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+    print("FCM token refreshed: $token");
+  });
+
+  // Get current token
+  String? token = await FirebaseMessaging.instance.getToken();
+  print("FCM token: $token");
+
   runApp(const MyApp());
+  // fetchUsers();
 }
+
+@pragma('vm:entry-point')
+Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
+  // In dữ liệu nhận được
+  print("🔔 Background Message: ${message.data}");
+
+  // Init GetStorage cho isolate nền
+  await GetStorage.init();
+
+  // Lấy thời gian hiện tại
+  final now = DateTime.now();
+
+  // Format hh:mm:ss
+  final formatted = DateFormat('HH:mm:ss').format(now);
+  fetchUsers();
+
+
+  print("🔔 Background Message 2: ${formatted}");
+}
+
+Future<void> fetchUsers() async {
+  final url = Uri.parse('https://dummyjson.com/users');
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    final data = jsonEncode(response.body);
+    print('Users data: $data');
+    // Lưu vào Storage
+    Storage.instance.setString("date", data);
+  } else {
+    print('Request failed with status: ${response.statusCode}');
+    Storage.instance.setString("date", "error");
+  }
+}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -16,7 +114,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: '123123',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -35,7 +133,9 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
           colorScheme: .fromSeed(seedColor: Colors.deepPurple),
     ),
-    home: SafeArea(child:  const LoginPage(title: 'Flutter Demo Home Page'))
+    home: SafeArea(child: const LoginPage(title:"   FlutterDemoHomePage"
+    )
+    )
     );
   }
 }
