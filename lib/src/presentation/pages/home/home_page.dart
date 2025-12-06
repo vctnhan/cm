@@ -25,22 +25,27 @@ void main() => runApp(
 
 // Creating a stateless widget which is the root of the application.
 class MyApp extends ConsumerWidget {
-  const MyApp({Key? key}) : super(key: key); // Constructor with optional key.
+  const MyApp({super.key}); // Constructor with optional key.
 
   // The build method describes the widget tree.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
-      title: "ListView.builder",
-      // Title of the application.
-      theme: ThemeData(primarySwatch: Colors.green),
-      // App theme with green as primary color.
-      debugShowCheckedModeBanner: false,
-      // Hides the debug banner in the top-right corner.
+    return ValueListenableBuilder(
+      valueListenable: themeNotifier,
+      builder: (context, value, child) {
+        return MaterialApp(
+          title: "ListView.builder",
+          // Title of the application.
+          theme: ThemeData(primarySwatch: Colors.green, primaryColor: value.primary),
+          // App theme with green as primary color.
+          debugShowCheckedModeBanner: false,
+          // Hides the debug banner in the top-right corner.
 
-      // Sets the home screen to ListViewBuilder widget.
-      // Note: No need to use the `new` keyword in modern Dart.
-      home: MyHomePage(title: 'hehehe'),
+          // Sets the home screen to ListViewBuilder widget.
+          // Note: No need to use the `new` keyword in modern Dart.
+          home: MyHomePage(title: 'hehehe'),
+        );
+      }
     );
   }
 }
@@ -76,17 +81,18 @@ class MyHomePage extends ConsumerWidget {
           children: [
             FloatingActionButton(
               onPressed: () {
-                Logger.log("day day 1");
+                String jsonString = jsonEncode(AppThemes.halloween.toJson());
+                Logger.log("JSON: $jsonString");
 
-                var a =  jsonEncode(AppThemes.halloween);
-                Logger.log("day day $a");
-                final newTheme =
-                    jsonDecode(jsonEncode(AppThemes.halloween)) as ThemeTokens;
+                // Decode về Map, rồi convert sang ThemeTokens
+                Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+                ThemeTokens newTheme = ThemeTokens.fromJson(jsonMap);
+                // final newTheme =
+                //     jsonDecode(jsonEncode(AppThemes.halloween)) as ThemeTokens;
                 // final newTheme = JsonMapper.deserialize<ThemeTokens>(
                 //   JsonMapper.serialize(AppThemes.halloween),
                 // );
-                themeNotifier.value = newTheme!;
-                // themeNotifier.notifyListeners(); // ép rebuild
+                themeNotifier.value = newTheme;
               },
               child: Text("sdfsdfsdf"),
             ),
@@ -220,20 +226,20 @@ class CustomItem2 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(content.text ?? ""),
-                Text("Subtitle"),
-                CachedNetworkImage(
-                  imageUrl:
-                  "https://cdn2.fptshop.com.vn/unsafe/Uploads/images/tin-tuc/172740/Originals/background-la-gi-1.jpg",
-                  height: 120,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      Container(
-                        height: 120,
-                        color: Colors.grey[300], // placeholder tĩnh nhẹ
-                      ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
+                // Text("Subtitle"),
+                // CachedNetworkImage(
+                //   imageUrl:
+                //   "https://cdn2.fptshop.com.vn/unsafe/Uploads/images/tin-tuc/172740/Originals/background-la-gi-1.jpg",
+                //   height: 120,
+                //   width: double.infinity,
+                //   fit: BoxFit.cover,
+                //   placeholder: (context, url) =>
+                //       Container(
+                //         height: 120,
+                //         color: Colors.grey[300], // placeholder tĩnh nhẹ
+                //       ),
+                //   errorWidget: (context, url, error) => Icon(Icons.error),
+                // ),
               ],
             ),
           ),
@@ -244,58 +250,58 @@ class CustomItem2 extends StatelessWidget {
   }
 }
 
-// class ListViewBuilder extends StatefulWidget {
-//   const ListViewBuilder({Key? key})
-//       : super(key: key); // Constructor with optional key.
+class ListViewBuilder extends StatefulWidget {
+  const ListViewBuilder({Key? key})
+      : super(key: key); // Constructor with optional key.
+
+  @override
+  State<StatefulWidget> createState() {
+    return ListViewState();
+  }
+}
 //
-//   @override
-//   State<StatefulWidget> createState() {
-//     return ListViewState();
-//   }
-// }
-//
-// class ListViewState extends State<ListViewBuilder> {
-//   final itemList = List.generate(1000, (index) =>
-//       MessageEntity(id: uuidV7(),
-//           clientId: "",
-//           channelId: "",
-//           senderId: "senderId",
-//           text: "text",
-//           createdAt: 0,
-//           status: MessageStatus.pending));
-//   final ScrollController _scrollController = ScrollController();
-//
-//   void addItem(String content) {
-//     setState(() {
-//       final item = MessageEntity(id: uuidV7(),
-//           clientId: "",
-//           channelId: "",
-//           senderId: "senderId",
-//           text: "text",
-//           createdAt: 0,
-//           status: MessageStatus.pending);
-//       print("addd r ne");
-//       itemList.insert(0, item);
-//     });
-//     _scrollController.animateTo(0, duration: Duration(milliseconds: 300),
-//         curve: Curves.easeOut);
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ListView.builder(
-//       physics: const BouncingScrollPhysics(),
-//       controller: _scrollController,
-//
-//       // scroll kiểu iOS, có thể dùng trên Android
-//       itemCount: itemList.length,
-//       itemBuilder: (context, index) {
-//         return RepaintBoundary(
-//
-//           child: CustomItem(key: ValueKey("${itemList[index]}_$index",),
-//               content: itemList[index], isMe: true,),
-//         );
-//       },
-//     );
-//   }
-// }
+class ListViewState extends State<ListViewBuilder> {
+  final itemList = List.generate(1000, (index) =>
+      MessageEntity(id: uuidV7(),
+          clientId: "",
+          channelId: "",
+          senderId: "senderId",
+          text: "text",
+          createdAt: 0,
+          status: MessageStatus.pending));
+  final ScrollController _scrollController = ScrollController();
+
+  void addItem(String content) {
+    setState(() {
+      final item = MessageEntity(id: uuidV7(),
+          clientId: "",
+          channelId: "",
+          senderId: "senderId",
+          text: "text",
+          createdAt: 0,
+          status: MessageStatus.pending);
+      print("addd r ne");
+      itemList.insert(0, item);
+    });
+    _scrollController.animateTo(0, duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      controller: _scrollController,
+
+      // scroll kiểu iOS, có thể dùng trên Android
+      itemCount: itemList.length,
+      itemBuilder: (context, index) {
+        return RepaintBoundary(
+
+          child: CustomItem(key: ValueKey("${itemList[index]}_$index",),
+              content: itemList[index], isMe: true,),
+        );
+      },
+    );
+  }
+}

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:chipmunk/src/core/permission/permission.dart';
@@ -19,18 +20,24 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
   importance: Importance.high,
 );
 
-void main() async {
+Future<void>  main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GetStorage.init();
+   _initService();
+  runApp(const MyApp());
+  // fetchUsers();
+}
+
+Future<void> _initService() async{
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+   GetStorage.init();
+   await requestNotificationPermission();
 
   // Initialize Firebase
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Initialize local notifications
   await initNotifications();
 
   // Request permissions
-  await requestNotificationPermission();
 
   // Set background message handler
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
@@ -68,8 +75,6 @@ void main() async {
   String? token = await FirebaseMessaging.instance.getToken();
   print("FCM token: $token");
 
-  runApp(const MyApp());
-  // fetchUsers();
 }
 
 @pragma('vm:entry-point')
@@ -80,15 +85,18 @@ Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
   // Init GetStorage cho isolate nền
   await GetStorage.init();
 
-  // Lấy thời gian hiện tại
-  final now = DateTime.now();
 
-  // Format hh:mm:ss
-  final formatted = DateFormat('HH:mm:ss').format(now);
-  fetchUsers();
+  // fetchUsers();
+  Timer.periodic(const Duration(seconds: 1), (timer) {
+    // Lấy thời gian hiện tại
+    final now = DateTime.now();
 
+    // Format hh:mm:ss
+    final formatted = DateFormat('HH:mm:ss').format(now);
+    print("Log mỗi giây: ${formatted}");
+  });
 
-  print("🔔 Background Message 2: ${formatted}");
+  // print("🔔 Background Message 2: ${formatted}");
 }
 
 Future<void> fetchUsers() async {
