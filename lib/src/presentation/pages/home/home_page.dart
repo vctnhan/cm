@@ -1,6 +1,7 @@
 // Importing the Flutter Material package which contains all the UI components needed.
 import 'dart:convert';
 import 'dart:math';
+import 'package:uuid/uuid.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chipmunk/src/core/helpers/logger.dart';
@@ -11,16 +12,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/resource/theme/app_theme.dart';
 import '../../../core/resource/theme/theme_token.dart';
-import '../../../core/utils/uuid.dart';
 import 'home_provider.dart';
 
 // The main() function is the entry point of the Flutter application.
 void main() => runApp(
-
-  const ProviderScope(
-      child: const MyApp()
-  ),
-
+  const ProviderScope(child: const MyApp()),
 ); // Launches the app by running MyApp widget.
 
 // Creating a stateless widget which is the root of the application.
@@ -36,7 +32,10 @@ class MyApp extends ConsumerWidget {
         return MaterialApp(
           title: "ListView.builder",
           // Title of the application.
-          theme: ThemeData(primarySwatch: Colors.green, primaryColor: value.primary),
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+            primaryColor: value.primary,
+          ),
           // App theme with green as primary color.
           debugShowCheckedModeBanner: false,
           // Hides the debug banner in the top-right corner.
@@ -45,7 +44,7 @@ class MyApp extends ConsumerWidget {
           // Note: No need to use the `new` keyword in modern Dart.
           home: MyHomePage(title: 'hehehe'),
         );
-      }
+      },
     );
   }
 }
@@ -117,7 +116,7 @@ class MyHomePage extends ConsumerWidget {
                 itemCount: 1000000,
                 itemBuilder: (_, index) {
                   final message = MessageEntity(
-                    id: uuidV7(),
+                    id: const Uuid().v7(),
                     clientId: "",
                     channelId: "",
                     senderId: "senderId",
@@ -134,7 +133,7 @@ class MyHomePage extends ConsumerWidget {
             ChatInput(
               onSend: (input) {
                 final item = MessageEntity(
-                  id: uuidV7(),
+                  id: Uuid().v7(),
                   clientId: "",
                   channelId: "",
                   senderId: "senderId",
@@ -252,39 +251,49 @@ class CustomItem2 extends StatelessWidget {
 
 class ListViewBuilder extends StatefulWidget {
   const ListViewBuilder({Key? key})
-      : super(key: key); // Constructor with optional key.
+    : super(key: key); // Constructor with optional key.
 
   @override
   State<StatefulWidget> createState() {
     return ListViewState();
   }
 }
+
 //
 class ListViewState extends State<ListViewBuilder> {
-  final itemList = List.generate(1000, (index) =>
-      MessageEntity(id: uuidV7(),
-          clientId: "",
-          channelId: "",
-          senderId: "senderId",
-          text: "text",
-          createdAt: 0,
-          status: MessageStatus.pending));
+  final itemList = List.generate(
+    1000,
+    (index) => MessageEntity(
+      id: Uuid().v7(),
+      clientId: "",
+      channelId: "",
+      senderId: "senderId",
+      text: "text",
+      createdAt: 0,
+      status: MessageStatus.pending,
+    ),
+  );
   final ScrollController _scrollController = ScrollController();
 
   void addItem(String content) {
     setState(() {
-      final item = MessageEntity(id: uuidV7(),
-          clientId: "",
-          channelId: "",
-          senderId: "senderId",
-          text: "text",
-          createdAt: 0,
-          status: MessageStatus.pending);
+      final item = MessageEntity(
+        id: Uuid().v7(),
+        clientId: "",
+        channelId: "",
+        senderId: "senderId",
+        text: "text",
+        createdAt: 0,
+        status: MessageStatus.pending,
+      );
       print("addd r ne");
       itemList.insert(0, item);
     });
-    _scrollController.animateTo(0, duration: Duration(milliseconds: 300),
-        curve: Curves.easeOut);
+    _scrollController.animateTo(
+      0,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   @override
@@ -297,9 +306,11 @@ class ListViewState extends State<ListViewBuilder> {
       itemCount: itemList.length,
       itemBuilder: (context, index) {
         return RepaintBoundary(
-
-          child: CustomItem(key: ValueKey("${itemList[index]}_$index",),
-              content: itemList[index], isMe: true,),
+          child: CustomItem(
+            key: ValueKey("${itemList[index]}_$index"),
+            content: itemList[index],
+            isMe: true,
+          ),
         );
       },
     );
