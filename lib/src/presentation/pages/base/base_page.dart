@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/resource/theme/app_theme.dart';
-import '../../../core/resource/theme/theme_token.dart';
+import '../../../core/resource/theme/theme_tokens.dart';
 
 class BasePage extends ConsumerWidget {
   final String title;

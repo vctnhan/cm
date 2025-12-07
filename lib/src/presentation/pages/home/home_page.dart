@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/resource/theme/app_theme.dart';
-import '../../../core/resource/theme/theme_token.dart';
+import '../../../core/resource/theme/theme_tokens.dart';
 import 'home_provider.dart';
 
 // The main() function is the entry point of the Flutter application.
@@ -34,7 +34,7 @@ class MyApp extends ConsumerWidget {
           // Title of the application.
           theme: ThemeData(
             primarySwatch: Colors.green,
-            primaryColor: value.primary,
+            primaryColor: Color(value.primary!),
           ),
           // App theme with green as primary color.
           debugShowCheckedModeBanner: false,
@@ -80,55 +80,54 @@ class MyHomePage extends ConsumerWidget {
           children: [
             FloatingActionButton(
               onPressed: () {
-                String jsonString = jsonEncode(AppThemes.halloween.toJson());
-                Logger.log("JSON: $jsonString");
-
-                // Decode về Map, rồi convert sang ThemeTokens
-                Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-                ThemeTokens newTheme = ThemeTokens.fromJson(jsonMap);
-                // final newTheme =
-                //     jsonDecode(jsonEncode(AppThemes.halloween)) as ThemeTokens;
-                // final newTheme = JsonMapper.deserialize<ThemeTokens>(
-                //   JsonMapper.serialize(AppThemes.halloween),
-                // );
+                // String jsonString = jsonEncode(AppThemes.halloween.toJson());
+                // Logger.log("JSON: $jsonString");
+                //
+                // // Decode về Map, rồi convert sang ThemeTokens
+                // Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+                // ThemeTokens newTheme = ThemeTokens.fromJson(jsonMap);
+print("123123123");
+                final newTheme = ThemeTokens.fromJson(
+                  AppThemes.halloween.toJson(),
+                );
                 themeNotifier.value = newTheme;
               },
               child: Text("sdfsdfsdf"),
+            ),
+            Expanded(
+              child: ListView.builder(
+                controller: _controller,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                // reverse: true, // Nếu muốn tin nhắn mới nằm dưới cùng
+                itemCount: state.messages.length,
+                itemBuilder: (_, index) {
+                  final message = state.messages[index];
+                  // return CustomItem(content: message, isMe: true);
+                  return CustomItem2(content: message);
+                },
+              ),
             ),
             // Expanded(
             //   child: ListView.builder(
             //     controller: _controller,
             //     padding: const EdgeInsets.symmetric(vertical: 8),
             //     // reverse: true, // Nếu muốn tin nhắn mới nằm dưới cùng
-            //     itemCount: state.messages.length,
+            //     itemCount: 1000000,
             //     itemBuilder: (_, index) {
-            //       final message = state.messages[index];
-            //       // return CustomItem(content: message, isMe: true);
+            //       final message = MessageEntity(
+            //         id: const Uuid().v7(),
+            //         clientId: "",
+            //         channelId: "",
+            //         senderId: "senderId",
+            //         text: "Fake message số $index",
+            //         createdAt: 0,
+            //         status: MessageStatus.sent,
+            //       );
+            //
             //       return CustomItem2(content: message);
             //     },
             //   ),
             // ),
-            Expanded(
-              child: ListView.builder(
-                controller: _controller,
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                // reverse: true, // Nếu muốn tin nhắn mới nằm dưới cùng
-                itemCount: 1000000,
-                itemBuilder: (_, index) {
-                  final message = MessageEntity(
-                    id: const Uuid().v7(),
-                    clientId: "",
-                    channelId: "",
-                    senderId: "senderId",
-                    text: "Fake message số $index",
-                    createdAt: 0,
-                    status: MessageStatus.sent,
-                  );
-
-                  return CustomItem2(content: message);
-                },
-              ),
-            ),
             // Thanh nhập tin nhắn
             ChatInput(
               onSend: (input) {
@@ -190,7 +189,7 @@ class CustomItem extends ConsumerWidget {
             child: Text(
               content.text ?? "",
               style: TextStyle(
-                color: isMe ? themeNotifier.value.primary : Colors.black87,
+                color: isMe ? Color(themeNotifier.value.primary??Colors.black87.value) : Colors.black87,
                 fontSize: 15,
               ),
             ),
