@@ -12,9 +12,9 @@ ValueNotifier<ThemeTokens> themeNotifier = ValueNotifier(
 class AppThemes {
   // Theme mặc định
   static final ThemeTokens light = ThemeTokens(
-    primary: Colors.blue.value,
-    background: Colors.white.value,
-    text: Colors.black.value,
+    primary: "#EB0909",
+    background:  "#21D121",
+    text:  "#D121D1",
     assetPath: "assets/light",
     iconPath: "assets/light/icons",
     imagePath: "assets/light/images",
@@ -24,9 +24,9 @@ class AppThemes {
 
   // Theme Dark
   static final ThemeTokens dark = ThemeTokens(
-    primary: Colors.blueGrey.value,
-    background: Colors.orange.value,
-    text: Colors.white.value,
+    primary: "#241A10",
+    background:  "#192E19",
+    text:  "#525C52",
     assetPath: "assets/dark",
     iconPath: "assets/dark/icons",
     imagePath: "assets/dark/images",
@@ -36,9 +36,9 @@ class AppThemes {
 
   // Theme custom – ví dụ Halloween
   static final ThemeTokens halloween = ThemeTokens(
-    primary: Colors.orange.value,
-    background: Colors.orange.value,
-    text: Colors.white.value,
+    primary: "#D4AF83",
+    background:  "#2421D1",
+    text:  "#2421D1",
     assetPath: "assets/halloween",
     iconPath: "assets/halloween/icons",
     imagePath: "assets/halloween/images",

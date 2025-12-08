@@ -1,6 +1,8 @@
 // Importing the Flutter Material package which contains all the UI components needed.
 import 'dart:convert';
 import 'dart:math';
+import 'package:chipmunk/src/presentation/extensions/extensions.dart';
+import 'package:chipmunk/src/presentation/extensions/extensions.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -34,7 +36,7 @@ class MyApp extends ConsumerWidget {
           // Title of the application.
           theme: ThemeData(
             primarySwatch: Colors.green,
-            primaryColor: Color(value.primary!),
+            primaryColor: "#241A10".toColor(),
           ),
           // App theme with green as primary color.
           debugShowCheckedModeBanner: false,
@@ -189,7 +191,7 @@ class CustomItem extends ConsumerWidget {
             child: Text(
               content.text ?? "",
               style: TextStyle(
-                color: isMe ? Color(themeNotifier.value.primary??Colors.black87.value) : Colors.black87,
+                color: isMe ? themeNotifier.value.primary!.toColor() :"#241A10".toColor(),
                 fontSize: 15,
               ),
             ),

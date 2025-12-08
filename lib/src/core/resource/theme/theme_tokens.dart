@@ -6,9 +6,9 @@ part 'theme_tokens.g.dart';
 
 @JsonSerializable()
 class ThemeTokens {
-  int? primary;
-  int? background;
-  int? text;
+  String? primary;
+  String? background;
+  String? text;
   String? assetPath; // folder gốc
   String? iconPath; // folder icon
   String? imagePath; // folder image
