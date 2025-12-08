@@ -7,9 +7,9 @@ part of 'theme_tokens.dart';
 // **************************************************************************
 
 ThemeTokens _$ThemeTokensFromJson(Map<String, dynamic> json) => ThemeTokens(
-  primary: (json['primary'] as num?)?.toInt(),
-  background: (json['background'] as num?)?.toInt(),
-  text: (json['text'] as num?)?.toInt(),
+  primary: (json['primary']),
+  background: (json['background']),
+  text: (json['text']),
   assetPath: json['assetPath'] as String?,
   iconPath: json['iconPath'] as String?,
   imagePath: json['imagePath'] as String?,
